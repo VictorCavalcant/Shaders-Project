@@ -8,6 +8,7 @@ import {
   MeshToonMaterial,
   PlaneGeometry,
   Color,
+	MeshLambertMaterial,
 } from "three"
 import { renderer, updateRenderer } from "/src/core/renderer"
 
@@ -41,14 +42,49 @@ const PARAMS = {
 
 const sphere = new Mesh(
   new SphereGeometry(0.75, 32, 32),
-  new MeshToonMaterial({
+  new MeshLambertMaterial({
     color: new Color(PARAMS.color),
     wireframe: false,
   })
 )
 
+const sphere2 = new Mesh(
+  new SphereGeometry(0.75, 32, 32),
+  new MeshLambertMaterial({
+    color: "#0061ff",
+    wireframe: false,
+  })
+)
+
+
 sphere.position.set(0, 2, 0)
 sphere.castShadow = true
+
+const directionalLightCtrls = gui.addFolder({
+	title: "Luz Direcional",
+})
+
+directionalLightCtrls.addInput(directionalLight.position, "x", {
+	label: "dir x",
+	min: -10,
+	max: 10,
+	step: 0.1,
+})
+
+directionalLightCtrls.addInput(directionalLight.position, "y", {
+	label: "dir y",
+	min: -10,
+	max: 10,
+	step: 0.1,
+})
+
+directionalLightCtrls.addInput(directionalLight.position, "z", {
+	label: "dir z",
+	min: -10,
+	max: 10,
+	step: 0.1,
+})
+
 
 const sphereCtrls = gui.addFolder({
   title: "Sphere",
@@ -79,6 +115,9 @@ sphereCtrls.addInput(PARAMS, "color").on("change", (e) => {
 sphereCtrls.addInput(sphere.material, "wireframe")
 
 scene.add(sphere)
+scene.add(sphere2)
+sphere2.position.set(0, 4, 0)
+sphere2.castShadow = true
 
 const plane = new Mesh(
   new PlaneGeometry(10, 10, 10, 10),
