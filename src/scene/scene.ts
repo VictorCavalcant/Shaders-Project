@@ -1,3 +1,5 @@
+// Integrantes: Victor Cavalcante, Marcos Vinícius e Leonardo Evangelista
+
 import {
   Scene,
   AxesHelper,
@@ -9,6 +11,9 @@ import {
   PlaneGeometry,
   Color,
 	MeshLambertMaterial,
+  TorusGeometry,
+  Group,
+  CylinderGeometry,
 } from "three"
 import { renderer, updateRenderer } from "/src/core/renderer"
 
@@ -40,18 +45,13 @@ const PARAMS = {
   color: "#5EDCAE",
 }
 
+
+
+
 const sphere = new Mesh(
   new SphereGeometry(0.75, 32, 32),
   new MeshLambertMaterial({
-    color: new Color(PARAMS.color),
-    wireframe: false,
-  })
-)
-
-const sphere2 = new Mesh(
-  new SphereGeometry(0.75, 32, 32),
-  new MeshLambertMaterial({
-    color: "#0061ff",
+    color: "#B21414",
     wireframe: false,
   })
 )
@@ -115,9 +115,6 @@ sphereCtrls.addInput(PARAMS, "color").on("change", (e) => {
 sphereCtrls.addInput(sphere.material, "wireframe")
 
 scene.add(sphere)
-scene.add(sphere2)
-sphere2.position.set(0, 4, 0)
-sphere2.castShadow = true
 
 const plane = new Mesh(
   new PlaneGeometry(10, 10, 10, 10),
@@ -129,6 +126,55 @@ const plane = new Mesh(
 plane.receiveShadow = true
 plane.rotation.set(-Math.PI / 2, 0, 0)
 scene.add(plane)
+
+const ring = new Mesh(
+  new TorusGeometry(8, 1, 8, 50),
+  new MeshLambertMaterial({
+    color: new Color("#AF0402"),
+  })
+)
+
+const stick = new Mesh(
+  new CylinderGeometry(0.3, 0.3, 8, 10),
+  new MeshLambertMaterial({
+    color: new Color("#FFFF"),
+  })
+)
+
+scene.add(stick)
+
+stick.scale.set(0.5,0.46,0.5)
+stick.position.set(0,1.79,-0.4)
+stick.rotation.set(3.40,0,0)
+
+stick.castShadow = true
+
+scene.add(ring)
+ring.scale.set(0.1,0.1,0.1)
+ring.position.set(0,2,0)
+ring.rotation.set(5,0,0)
+
+ring.castShadow = true
+
+const lolipop_head = new Group();
+
+lolipop_head.add(sphere,ring)
+
+scene.add(lolipop_head)
+
+
+
+lolipop_head.position.set(0,1,0)
+
+const lolipop_full = new Group();
+
+lolipop_full.add(lolipop_head,stick)
+
+scene.add(lolipop_full)
+
+lolipop_full.position.set(0,0,0)
+
+
 
 export function updateScene() {
   updateRenderer()
